@@ -1,0 +1,7 @@
+sphinx
+sphinx-design
+sphinx-copybutton
+myst-parser
+furo
+sphinxcontrib-svg2pdfconverter[CairoSVG]
+
