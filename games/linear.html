@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Linear Scatter Plot with Regression</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+    svg {
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      margin-top: 20px;
+    }
+    input {
+      width: 60px;
+      margin: 0 10px;
+    }
+    #r2value {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Scatter plot: y = a x + b + e (e ~ N(0,1))</h2>
+
+<label>a: <input type="number" id="a" step="0.1" value="1"></label>
+<label>b: <input type="number" id="b" step="0.1" value="0"></label>
+<button onclick="drawPlot()">Draw Points</button>
+<button onclick="drawRegression()">Draw Regression</button>
+
+<svg id="plot" width="600" height="400" viewBox="0 0 12 8" style="max-width: 600px; height: 400px;"></svg>
+
+<div id="r2value"></div>
+
+<script>
+// Standard Normal generator using Box-Muller
+function randn_bm() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+let points = [];
+let yMin, yMax;
+
+function drawPlot() {
+  const a = parseFloat(document.getElementById("a").value);
+  const b = parseFloat(document.getElementById("b").value);
+  const svg = document.getElementById("plot");
+  document.getElementById("r2value").textContent = "";
+
+  // Clear previous points
+  svg.innerHTML = "";
+
+  // Create 100 points
+  points = [];
+  for (let i = 0; i < 100; i++) {
+    const x = Math.random() * 10;
+    const e = randn_bm(); // noise ~ N(0,1)
+    const y = a * x + b + e;
+    points.push({ x, y });
+  }
+
+  // Find y min/max for scaling (optional)
+  yMin = Math.min(...points.map(p => p.y));
+  yMax = Math.max(...points.map(p => p.y));
+
+  // Slight padding on y-axis
+  yMin -= 1;
+  yMax += 1;
+
+  // Draw axes + ticks + points
+  drawAxes(svg);
+  drawPoints(svg, points);
+}
+
+function drawAxes(svg) {
+  // Draw axis lines
+  svg.innerHTML += `
+    <line x1="1" y1="7" x2="11" y2="7" stroke="black" stroke-width="0.05"/>
+    <line x1="1" y1="7" x2="1" y2="1" stroke="black" stroke-width="0.05"/>
+  `;
+
+  // Draw x ticks and labels (0 to 10 step 1)
+  for (let xTick = 0; xTick <= 10; xTick++) {
+    const xPos = scaleX(xTick);
+    svg.innerHTML += `
+      <line x1="${xPos}" y1="7" x2="${xPos}" y2="6.7" stroke="black" stroke-width="0.05"/>
+      <text x="${xPos}" y="7.4" text-anchor="middle" font-size="0.3">${xTick}</text>
+    `;
+  }
+
+  // Draw y ticks and labels (rounded to integer steps)
+  const yRange = yMax - yMin;
+  // Choose about 7 ticks
+  const step = yRange / 7;
+  for (let i = 0; i <= 7; i++) {
+    const yVal = yMin + i * step;
+    const yPos = scaleY(yVal);
+    svg.innerHTML += `
+      <line x1="1" y1="${yPos}" x2="1.3" y2="${yPos}" stroke="black" stroke-width="0.05"/>
+      <text x="0.7" y="${yPos + 0.1}" text-anchor="end" font-size="0.3">${yVal.toFixed(1)}</text>
+    `;
+  }
+}
+
+function drawPoints(svg, pts) {
+  pts.forEach(p => {
+    svg.innerHTML += `<circle cx="${scaleX(p.x)}" cy="${scaleY(p.y)}" r="0.1" fill="steelblue"/>`;
+  });
+}
+
+// Scale functions for SVG coords
+function scaleX(x) {
+  // input 0..10 to svg 1..11 (leave margin)
+  return 1 + (x / 10) * 10;
+}
+function scaleY(y) {
+  // invert y because SVG y=0 is top
+  return 7 - ((y - yMin) / (yMax - yMin)) * 6;
+}
+
+// Regression + Draw line + R^2
+function drawRegression() {
+  if (points.length === 0) return;
+
+  const svg = document.getElementById("plot");
+  document.getElementById("r2value").textContent = "";
+
+  // Build X matrix (with intercept) and Y vector
+  // X = [ [1, x0], [1, x1], ... ], Y = [y0, y1, ...]
+  const X = points.map(p => [1, p.x]);
+  const Y = points.map(p => p.y);
+
+  // Compute normal equation solution: beta = (X^T X)^-1 X^T Y
+  // Here beta = [b_hat, a_hat]
+  const XT = transpose(X);
+  const XTX = multiplyMatrices(XT, X);
+  const XTY = multiplyMatrixVector(XT, Y);
+  const invXTX = invert2x2(XTX);
+  if (!invXTX) {
+    alert("Matrix inversion failed!");
+    return;
+  }
+  const beta = multiplyMatrixVector(invXTX, XTY);
+  const bHat = beta[0];
+  const aHat = beta[1];
+
+  // Calculate R^2
+  const yMean = Y.reduce((a,b) => a + b, 0) / Y.length;
+  let ssTot = 0, ssRes = 0;
+  for(let i=0; i < Y.length; i++) {
+    const yPred = bHat + aHat * points[i].x;
+    ssTot += (Y[i] - yMean)**2;
+    ssRes += (Y[i] - yPred)**2;
+  }
+  const r2 = 1 - ssRes/ssTot;
+
+  // Draw regression line on SVG from x=0 to x=10
+  const x1 = 0, y1 = bHat + aHat * 0;
+  const x2 = 10, y2 = bHat + aHat * 10;
+
+  // Draw on top of existing plot, keep points visible
+  // Append regression line in red and bold
+  svg.innerHTML += `
+    <line x1="${scaleX(x1)}" y1="${scaleY(y1)}" x2="${scaleX(x2)}" y2="${scaleY(y2)}" 
+      stroke="red" stroke-width="0.2" />
+  `;
+
+  document.getElementById("r2value").textContent = `Regression line: y = ${aHat.toFixed(3)}x + ${bHat.toFixed(3)}, R² = ${r2.toFixed(4)}`;
+}
+
+// Matrix helper functions (for 2x2 inversion only)
+function transpose(matrix) {
+  return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+}
+
+function multiplyMatrices(A, B) {
+  const rowsA = A.length, colsA = A[0].length;
+  const rowsB = B.length, colsB = B[0].length;
+  if (colsA !== rowsB) throw new Error("Incompatible matrix sizes");
+  const result = new Array(rowsA).fill(0).map(() => new Array(colsB).fill(0));
+  for (let i=0; i<rowsA; i++) {
+    for (let j=0; j<colsB; j++) {
+      for (let k=0; k<colsA; k++) {
+        result[i][j] += A[i][k]*B[k][j];
+      }
+    }
+  }
+  return result;
+}
+
+function multiplyMatrixVector(M, v) {
+  return M.map(row => row.reduce((acc, val, idx) => acc + val * v[idx], 0));
+}
+
+function invert2x2(M) {
+  // 2x2 matrix inversion
+  const [[a,b],[c,d]] = M;
+  const det = a*d - b*c;
+  if (Math.abs(det) < 1e-10) return null;
+  const invDet = 1/det;
+  return [
+    [d*invDet, -b*invDet],
+    [-c*invDet, a*invDet]
+  ];
+}
+
+// Draw initial points on load
+drawPlot();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Grid Transformation</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+    }
+    svg {
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+    }
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Interactive Grid via Basis Vectors</h2>
+
+<!-- Inputs for vectors -->
+<p>
+  x1: <input type="number" id="x1" value="40">
+  y1: <input type="number" id="y1" value="0">
+  x2: <input type="number" id="x2" value="0">
+  y2: <input type="number" id="y2" value="40">
+  <button onclick="updateGrid()">Update Grid</button>
+</p>
+
+<!-- SVG canvas -->
+<svg id="grid" width="500" height="500" viewBox="-250 -250 500 500">
+</svg>
+
+<script>
+function drawGrid(x1, y1, x2, y2) {
+  const svg = document.getElementById("grid");
+  svg.innerHTML = ""; // Clear previous grid
+
+  const lines = [];
+  const count = 10; // number of lines in each direction
+
+  // Draw grid lines parallel to vector 1
+  for (let i = -count; i <= count; i++) {
+    for (let j = -count; j <= count; j++) {
+      const xStart = i * x2 + j * x1;
+      const yStart = i * y2 + j * y1;
+      const xEnd = xStart + x1;
+      const yEnd = yStart + y1;
+      lines.push(`<line x1="${xStart}" y1="${yStart}" x2="${xEnd}" y2="${yEnd}" stroke="#ccc" stroke-width="1"/>`);
+    }
+  }
+
+  // Draw grid lines parallel to vector 2
+  for (let i = -count; i <= count; i++) {
+    for (let j = -count; j <= count; j++) {
+      const xStart = i * x1 + j * x2;
+      const yStart = i * y1 + j * y2;
+      const xEnd = xStart + x2;
+      const yEnd = yStart + y2;
+      lines.push(`<line x1="${xStart}" y1="${yStart}" x2="${xEnd}" y2="${yEnd}" stroke="#ccc" stroke-width="1"/>`);
+    }
+  }
+
+  // Draw origin
+  lines.push(`<circle cx="0" cy="0" r="3" fill="black"/>`);
+
+  // Draw red vector (x1, y1)
+  lines.push(`<line x1="0" y1="0" x2="${x1}" y2="${y1}" stroke="red" stroke-width="3" marker-end="url(#arrow)"/>`);
+
+  // Draw green vector (x2, y2)
+  lines.push(`<line x1="0" y1="0" x2="${x2}" y2="${y2}" stroke="green" stroke-width="3" marker-end="url(#arrow)"/>`);
+
+  // Add arrowhead marker
+  lines.unshift(`
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L9,3 z" fill="black" />
+      </marker>
+    </defs>
+  `);
+
+  svg.innerHTML = lines.join("\n");
+}
+
+// Initial draw
+updateGrid();
+
+function updateGrid() {
+  const x1 = parseFloat(document.getElementById("x1").value);
+  const y1 = parseFloat(document.getElementById("y1").value);
+  const x2 = parseFloat(document.getElementById("x2").value);
+  const y2 = parseFloat(document.getElementById("y2").value);
+  drawGrid(x1, y1, x2, y2);
+}
+</script>
+
+</body>
+</html>

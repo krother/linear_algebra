@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editable Matrix</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 50px;
+      background-color: #f9f9f9;
+    }
+
+    .matrix-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .curly-brace {
+      font-size: 200px;
+      font-weight: 100;
+      line-height: 0.7;
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-top: -20px;
+      user-select: none;
+    }
+
+    .vector {
+      display: grid;
+      grid-template-columns: repeat(1, 60px);
+      grid-gap: 10px;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-gap: 10px;
+    }
+
+    .matrix .vector input[type="number"] {
+      width: 60px;
+      height: 40px;
+      text-align: center;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-wrapper {
+      text-align: center;
+    }
+
+    .fruit {
+      font-size: 100px;
+      margin: 20px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Edit 3×3 Matrix</h1>
+
+  <form class="form-wrapper" action="#" method="post">
+
+    <table border="0">
+        <tr><td>
+            <div class="matrix-container">
+                <div class="curly-brace">(</div>
+                <div class="vector">
+                    <input type="number" name="value0" value="0" />
+                    <input type="number" name="value1" value="0" />
+                    <input type="number" name="value2" value="0" />
+                </div>
+                <div class="curly-brace">)</div>
+            </div>
+        </td>
+        
+        <td>
+            <div class="matrix-container">
+                <div class="curly-brace">(</div>
+                <div class="matrix">
+                    <input type="number" name="value0" value="0" />
+                    <input type="number" name="value1" value="0" />
+                <input type="number" name="value2" value="0" />
+                <input type="number" name="value3" value="0" />
+                <input type="number" name="value4" value="0" />
+                <input type="number" name="value5" value="0" />
+                <input type="number" name="value6" value="0" />
+                <input type="number" name="value7" value="0" />
+                <input type="number" name="value8" value="0" />
+            </div>
+            <div class="curly-brace">)</div>
+        </div>
+        </td>
+
+        </tr>
+    </table>
+    <button type="submit">Submit Matrix</button>
+  </form>
+
+  <button onclick="extendMinuteHand()">Extend Minute Hand</button>
+
+<script>
+  function extendMinuteHand() {
+    const minuteHand = document.getElementById("minuteHand");
+    minuteHand.setAttribute("x2", "200");
+  }
+</script>
+
+
+  <svg width="400" height="400" viewBox="0 0 200 200"
+     xmlns="http://www.w3.org/2000/svg">
+  <!-- Clock face -->
+  <circle cx="100" cy="100" r="90" fill="white" stroke="black" stroke-width="4" />
+
+  <!-- Hour ticks -->
+  <g stroke="black" stroke-width="2">
+    <!-- 12 dashes -->
+    <!-- Rotate each tick around the center -->
+    <g transform="translate(100,100)">
+      <!-- Tick at every 30 degrees -->
+      <!-- Line from (0, -80) to (0, -90), rotated -->
+      <!-- We'll use a loop-like structure (written out manually) -->
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(0)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(30)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(60)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(90)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(120)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(150)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(180)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(210)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(240)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(270)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(300)" />
+      <line x1="0" y1="-80" x2="0" y2="-90" transform="rotate(330)" />
+    </g>
+  </g>
+
+  <!-- Hour hand (13:20 => 1 hour + 1/3 towards 2) -->
+  <!-- 1 hour = 30°, 1/3 of 30° = 10°, so angle = 40° -->
+  <line x1="100" y1="100" x2="100" y2="60"
+        stroke="green" stroke-width="6"
+        transform="rotate(40, 100, 100)" />
+
+  <!-- Minute hand (20 min = 120°) -->
+  <line id="minuteHand" x1="100" y1="100" x2="100" y2="40"
+        stroke="blue" stroke-width="4"
+        transform="rotate(120, 100, 100)" />
+
+  <!-- Center dot -->
+  <circle cx="100" cy="100" r="4" fill="black" />
+</svg>
+
+<svg width="120" height="90" viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top row: 3 blocks -->
+  <rect x="0" y="0" width="30" height="30" fill="purple" stroke="black" stroke-width="2"/>
+  <rect x="30" y="0" width="30" height="30" fill="purple" stroke="black" stroke-width="2"/>
+  <rect x="60" y="0" width="30" height="30" fill="purple" stroke="black" stroke-width="2"/>
+
+  <!-- Middle block (centered under the top row) -->
+  <rect x="30" y="30" width="30" height="30" fill="purple" stroke="black" stroke-width="2"/>
+</svg>
+
+<div style="font-size:100px;">🍎🍌🍊🍓🍇🍉🍍🥝🥭🍒</div>
+
+
+</body>
+</html>

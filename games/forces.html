@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Graph with Similarity Forces</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+    svg {
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      margin-top: 20px;
+    }
+    table {
+      margin: 20px auto;
+    }
+    input[type="number"] {
+      width: 40px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Similarity-Based Force Graph</h2>
+
+<!-- Matrix Input -->
+<table>
+  <tbody id="matrixTable"></tbody>
+</table>
+
+<button onclick="startSimulation()">Start Simulation</button>
+
+<!-- SVG Graph -->
+<svg id="graph" width="500" height="500"></svg>
+
+<script>
+  const svg = document.getElementById("graph");
+  const width = 500;
+  const height = 500;
+  const radius = 15;
+  const nodeCount = 5;
+  const matrixSize = 5;
+
+  // Random node positions
+  const nodes = Array.from({ length: nodeCount }, () => ({
+    x: Math.random() * 460 + 20,
+    y: Math.random() * 460 + 20,
+    vx: 0,
+    vy: 0,
+  }));
+
+  // Create matrix input table
+  const matrixTable = document.getElementById("matrixTable");
+  for (let i = 0; i < matrixSize; i++) {
+    const row = document.createElement("tr");
+    for (let j = 0; j < matrixSize; j++) {
+      const cell = document.createElement("td");
+      cell.innerHTML = `<input type="number" min="0" id="cell-${i}-${j}" value="${i === j ? 0 : Math.round(Math.random())}">`;
+      row.appendChild(cell);
+    }
+    matrixTable.appendChild(row);
+  }
+
+  // Draw initial nodes
+  function drawGraph() {
+    svg.innerHTML = "";
+
+    // Draw edges (similarity > 0)
+    for (let i = 0; i < matrixSize; i++) {
+      for (let j = i + 1; j < matrixSize; j++) {
+        const sim = parseFloat(document.getElementById(`cell-${i}-${j}`).value);
+        if (sim > 0) {
+          const n1 = nodes[i];
+          const n2 = nodes[j];
+          svg.innerHTML += `<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="#ccc"/>`;
+        }
+      }
+    }
+
+    // Draw circles and labels
+    nodes.forEach((node, i) => {
+      svg.innerHTML += `
+        <circle cx="${node.x}" cy="${node.y}" r="${radius}" fill="blue" stroke="black" stroke-width="2"/>
+        <text x="${node.x}" y="${node.y + 5}" text-anchor="middle" fill="white" font-size="14">${i}</text>
+      `;
+    });
+  }
+
+  drawGraph();
+
+  // Start force-based layout animation
+  function startSimulation() {
+    const matrix = [];
+    for (let i = 0; i < matrixSize; i++) {
+      matrix[i] = [];
+      for (let j = 0; j < matrixSize; j++) {
+        matrix[i][j] = parseFloat(document.getElementById(`cell-${i}-${j}`).value) || 0;
+      }
+    }
+
+    function step() {
+      const damping = 0.9;
+      const forceStrength = 0.01;
+
+      // Zero velocities
+      for (let i = 0; i < matrixSize; i++) {
+        let fx = 0, fy = 0;
+        for (let j = 0; j < matrixSize; j++) {
+            if (i === j) continue;
+
+            const dx = nodes[j].x - nodes[i].x;
+            const dy = nodes[j].y - nodes[i].y;
+            const distSq = dx * dx + dy * dy + 0.01; // prevent divide-by-zero
+            const dist = Math.sqrt(distSq);
+            const ux = dx / dist;
+            const uy = dy / dist;
+
+            // Attraction: only if similarity > 0
+            const sim = matrix[i][j];
+            if (sim > 0) {
+                const attraction = forceStrength * sim * sim;
+                fx += attraction * ux;
+                fy += attraction * uy;
+            }
+
+            // Repulsion: always apply
+            const repulsion = 100 / distSq; // tune the constant as needed
+            fx -= repulsion * ux;
+            fy -= repulsion * uy;
+        }
+        nodes[i].vx = (nodes[i].vx + fx) * damping;
+        nodes[i].vy = (nodes[i].vy + fy) * damping;
+      }
+
+      // Update positions
+      for (let i = 0; i < matrixSize; i++) {
+        nodes[i].x += nodes[i].vx;
+        nodes[i].y += nodes[i].vy;
+
+        // Keep nodes within bounds
+        nodes[i].x = Math.max(radius, Math.min(width - radius, nodes[i].x));
+        nodes[i].y = Math.max(radius, Math.min(height - radius, nodes[i].y));
+      }
+
+      drawGraph();
+
+      requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+</script>
+
+</body>
+</html>
