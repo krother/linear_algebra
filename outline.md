@@ -95,6 +95,7 @@ Example: number images
 
 ## Links
 
+Linalg in 4 pages
 
 https://courses.lumenlearning.com/cuny-hunter-collegealgebra/chapter/systems-of-linear-equations-two-variables/
 
