@@ -32,6 +32,8 @@ Contents
    exercises/distances_and_norms.rst
    exercises/recommender.rst
    exercises/linear_equation_systems.rst
+   exercises/graph_analysis.rst
+   exercises/vectorization.rst
    chapters/links.rst
 
 
