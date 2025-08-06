@@ -2,6 +2,24 @@
 Matrices
 ========
 
+.. figure:: checkers.png
+
+
+.. topic:: Eye Candy
+
+   Re-create the above graphic with:
+
+   .. code:: python3
+
+      import math
+      import numpy as np
+      from matplotlib import pyplot as plt
+
+      A = np.random.normal(size=(1, 16))
+      M = A.T * A
+      plt.imshow(M)
+
+
 In this exercise, you continue using vectors to calculate the price of fruit baskets.
 This time, you will need **matrices**.
 
