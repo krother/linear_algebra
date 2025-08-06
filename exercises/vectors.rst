@@ -1,12 +1,29 @@
 Vectors
 =======
 
+.. figure:: sinwaves.png
+
 .. note::
 
    Run these exercises by copy-pasting the code into a Jupyter notebook or Google Colab.
    You can also use the notebook :download:`exercises_part1.ipynb`
 
-IMAGE FRUIT BASKET
+.. topic:: Eye Candy
+
+   Re-create the above graphic with:
+
+   .. code:: python3
+
+      import math
+      import numpy as np
+      from matplotlib import pyplot as plt
+
+      plt.figure(figsize=(10, 4))
+      x = np.linspace(0, 30, 1000)  # creates a vector of 1000 numbers
+      for i in range(10):
+         y = np.sin(x + i * math.pi / 8)  # scalar multiplication
+         plt.plot(y)
+
 
 Create Vectors
 --------------
