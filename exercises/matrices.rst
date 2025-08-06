@@ -109,7 +109,7 @@ Useful phrases
 
 .. code:: python3
 
-   B = np.arange(6).reshape((3, 2))
+   B = np.arange(6).reshape((2, 3))
 
 Position-wise multiplication, if matrices have the same size:
 

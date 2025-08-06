@@ -3,11 +3,6 @@ Vectors
 
 .. figure:: sinwaves.png
 
-.. note::
-
-   Run these exercises by copy-pasting the code into a Jupyter notebook or Google Colab.
-   You can also use the notebook :download:`exercises_part1.ipynb`
-
 .. topic:: Eye Candy
 
    Re-create the above graphic with:

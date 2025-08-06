@@ -31,7 +31,7 @@ What is the size of the resulting data?
 2D Convolution
 --------------
 
-.. figure:: con_face.png
+.. figure:: cnn_face.png
 
 **Convolution** is the fundamental operation that neural networks use to interpret pixel images.
 During the past decade it has led to tremendous progress in the field of image recognition.
