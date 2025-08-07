@@ -12,10 +12,33 @@ It gives you an overview of fundamental concepts and some fields of application.
 The exercises use the Python programming examples using the Numpy library.
 To work through them, very little Python experience should be sufficient.
 
-Presentation slides
--------------------
+Slides and Exercise Notebooks
+-----------------------------
 
-You can download the slides for a 4-hour workshop as a :download:`Jupyter notebook <slides/presentation.ipynb>` and as a :download:`PDF <slides/linear_algebra.pdf>`.
+You can download the material for a 4-hour workshop and open the exercise notebooks on **Google Colab**:
+
+ 
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Document               | Colab                                                                                                       | Download                                                                 |
++========================+=============================================================================================================+==========================================================================+
+| Presentation Slides    | -                                                                                                           | :download:`Download PDF <linear_algebra.pdf>`                            |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Vectors                | `Open in Colab <https://colab.research.google.com/drive/1n8beY8mcmcPatU3-UPLnO8eBnpr6FuxK?usp=sharing>`__   | :download:`Download notebook <exercises/vectors.ipynb>`                  |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Matrices               | `Open in Colab <https://colab.research.google.com/drive/1ZTK7BcwtsLyix_6m6hIgNX-n6PQLHZFw?usp=sharing>`__   | :download:`Download notebook <exercises/matrices.ipynb>`                 |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Linear Transformations | `Open in Colab <https://colab.research.google.com/drive/1cs-Z6xLA0L0tKwGt3VNJgShYiYgFb7mC?usp=sharing>`__   | :download:`Download notebook <exercises/linear_transformations.ipynb>`   |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Distances and Norms    | `Open in Colab <https://colab.research.google.com/drive/1LdOgOknX1WH2G8xv4oH3VOVcSf2kG3ga?usp=sharing>`__   | :download:`Download notebook <exercises/distances_and_norms.ipynb>`      |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Recommender            | `Open in Colab <https://colab.research.google.com/drive/1-5RrwW_RT4rVZtg19fyItagjaQ9e9Dd6?usp=sharing>`__   | :download:`Download notebook <exercises/recommender.ipynb>`              |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Linear Equation Systems| `Open in Colab <https://colab.research.google.com/drive/1RazcRDkcJ48aWzV1-kMiJ_YTRYkT_Cx4?usp=sharing>`__   | :download:`Download notebook <exercises/linear_equation_systems.ipynb>`  |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Graph Analysis         | `Open in Colab <https://colab.research.google.com/drive/1ObkCPSMj5UkYMGSpPHIjlzKL0P_lZ2p6?usp=sharing>`__   | :download:`Download notebook <exercises/graph_analysis.ipynb>`           |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
+| Vectorization          | `Open in Colab <https://colab.research.google.com/drive/1JkSijrumGweHYwVzT6_v5K0bY6-Q98d2?usp=sharing>`__   | :download:`Download notebook <exercises/vectorization.ipynb>`            |
++------------------------+-------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------+
 
 
 Contents
